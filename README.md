@@ -1,10 +1,10 @@
 # economyPlugins
 
-About:
-
 Plugins are for the youth group minecraft server.
 
 WARNING: I know next to nothing about Java. All code is from watching tutorials and stackoverflow.
+
+Note: /shop is still in development, it is currently not working.
 
 
 
