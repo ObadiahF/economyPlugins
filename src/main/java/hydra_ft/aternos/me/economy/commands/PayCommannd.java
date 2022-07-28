@@ -47,6 +47,10 @@ public class PayCommannd implements CommandExecutor {
                         player.sendMessage(ChatColor.RED + "Cannot send money to yourself!");
                         return true;
                     }
+                    if (!(Bukkit.getPlayer(args[0]).isOnline())) {
+                        player.sendMessage(ChatColor.RED + "Player must be online!");
+                        return true;
+                    }
                 } else {
                     player.sendMessage(ChatColor.RED + "/pay <player> <amount>");
                     return true;
@@ -77,9 +81,17 @@ public class PayCommannd implements CommandExecutor {
                 Balance = reader.readLine();
                 reader.close();
             } catch (IOException e) {
-                System.out.println("An error occurred.");
-                e.printStackTrace();
-                player.sendMessage(ChatColor.RED + "An error occurred.");
+                try {
+                    Balance = "100";
+                    File myObj = new File(player + ".txt");
+                        System.out.println("File created: " + myObj.getName());
+                        FileWriter myWriter = new FileWriter( player + ".txt");
+                        myWriter.write(Balance);
+                        myWriter.close();
+                } catch (IOException q) {
+                    System.out.println("An error occurred.");
+                    q.printStackTrace();
+                }
             }
             int BalanceToInt = Integer.parseInt(Balance);
             int amountToInt = Integer.parseInt(amount);
@@ -114,9 +126,17 @@ public class PayCommannd implements CommandExecutor {
                     RecieverBalance = reader.readLine();
                     reader.close();
                 } catch (IOException e) {
-                    System.out.println("An error occurred.");
-                    e.printStackTrace();
-                    player.sendMessage(ChatColor.RED + "An error occurred.");
+                    try {
+                        File myObj = new File(RecievingPlayer + ".txt");
+                        System.out.println("File created: " + myObj.getName());
+                        FileWriter myWriter = new FileWriter( RecievingPlayer + ".txt");
+                        myWriter.write(newBalance);
+                        myWriter.close();
+                        RecieverBalance = "100";
+                    } catch (IOException q) {
+                        System.out.println("An error occurred.");
+                        q.printStackTrace();
+                    }
                 }
                 //player.sendMessage("Reciever bal: " + RecieverBalance);
                 //add moeny to reciever money from sender
