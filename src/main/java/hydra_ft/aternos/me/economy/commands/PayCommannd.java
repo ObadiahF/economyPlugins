@@ -124,7 +124,7 @@ public class PayCommannd implements CommandExecutor {
                     try {
                         File myObj = new File(RecievingPlayer + ".txt");
                         System.out.println("File created: " + myObj.getName());
-                        FileWriter myWriter = new FileWriter( RecievingPlayer + ".txt");
+                        FileWriter myWriter = new FileWriter(RecievingPlayer + ".txt");
                         myWriter.write(newBalance);
                         myWriter.close();
                         RecieverBalance = "100";

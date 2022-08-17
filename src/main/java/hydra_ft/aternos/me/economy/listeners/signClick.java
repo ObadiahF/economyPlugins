@@ -28,7 +28,6 @@ import java.io.IOException;
 public class signClick implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        String mode = null;
         Player player = event.getPlayer();
         if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
             if (event.getClickedBlock().getState() instanceof Sign) {
@@ -41,100 +40,98 @@ public class signClick implements Listener {
                 String Block = sign.getLine(2);
                 String price = sign.getLine(3);
 
-                player.sendMessage(customBlock);
                 //get block
                 Material target = new Location(player.getWorld(), locationx, locationy - 1, locationz).getBlock().getType();
 
                 if (!customBlock.equals("")) {
                     target = Material.valueOf(customBlock);
                 }
-
-                //get mode
-                if (sign.getLine(0).equals("[Buy]")) {
-                    mode = "Buying";
-                }
-                if (sign.getLine(0).equals("[Sell]")) {
-                    mode = "Selling";
-                }
-
-
-
-                //for selling
-                if (mode == "Selling") {
-                    String Balance = null;
-                    if (player.getInventory().containsAtLeast(new ItemStack(target), 1)) {
-                        //read file
-                        try {
-                            File myObj = new File(player + ".txt");
-                            Scanner myReader = new Scanner(myObj);
-                            while (myReader.hasNextLine()) {
-                                Balance  = myReader.nextLine();
-                            }
-                            myReader.close();
-                        } catch (FileNotFoundException e) {
-                            throw new RuntimeException(e);
-                        }
-
-                        int newBalance = Integer.parseInt(Balance) + Integer.parseInt(price);
-                        String NewBalance1 = String.valueOf(newBalance);
-
-                        try {
-                            FileWriter myWriter = new FileWriter(player + ".txt");
-                            myWriter.write(NewBalance1);
-                            myWriter.close();
-                            System.out.println(player + "'s Bal: $" + newBalance);
-                            player.sendMessage(ChatColor.GREEN + "Successfully sold 1 " + Block + " for $" + price);
-                            player.getInventory().removeItem(new ItemStack(target, 1));
-                        } catch (IOException e) {
-                            System.out.println("An error occurred.");
-                            e.printStackTrace();
-                        }
-                        mode = null;
-
-                    } else {
-                        player.sendMessage(ChatColor.RED + "You do not have enough " + Block + " to sell.");
+                String Balance = null;
+                //read file
+                try {
+                    File myObj = new File(player + ".txt");
+                    Scanner myReader = new Scanner(myObj);
+                    while (myReader.hasNextLine()) {
+                        Balance  = myReader.nextLine();
                     }
+                    myReader.close();
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
                 }
 
-                //for buying
-                if (mode == "Buying") {
-                    String Balance = null;
-                    //read file
+                //check if enough money
+                if (Integer.parseInt(Balance) < Integer.parseInt(price)) {
+                    player.sendMessage(ChatColor.RED + "Not Enough Money");
+                } else {
+                    int newBalance = Integer.parseInt(Balance) - Integer.parseInt(price);
+                    String NewBalance1 = String.valueOf(newBalance);
+
                     try {
-                        File myObj = new File(player + ".txt");
-                        Scanner myReader = new Scanner(myObj);
-                        while (myReader.hasNextLine()) {
-                            Balance  = myReader.nextLine();
-                    }
-                        myReader.close();
-                    } catch (FileNotFoundException e) {
-                        throw new RuntimeException(e);
-                    }
-
-                    //check if enough money
-                    if (Integer.parseInt(Balance) < Integer.parseInt(price)) {
-                        player.sendMessage(ChatColor.RED + "Not Enough Money");
-                    } else {
-                        int newBalance = Integer.parseInt(Balance) - Integer.parseInt(price);
-                        String NewBalance1 = String.valueOf(newBalance);
-
-                        try {
-                            FileWriter myWriter = new FileWriter(player + ".txt");
-                            myWriter.write(NewBalance1);
-                            myWriter.close();
-                            System.out.println(player + "'s Bal: $" + newBalance);
-                            player.sendMessage(ChatColor.GREEN + "Successfully bought " + Block + " for $" + price);
-                            player.getInventory().addItem(new ItemStack(target, 1));
-                        } catch (IOException e) {
-                            System.out.println("An error occurred.");
-                            e.printStackTrace();
-                        }
-                        mode = null;
-
-                    }
+                        FileWriter myWriter = new FileWriter(player + ".txt");
+                        myWriter.write(NewBalance1);
+                        myWriter.close();
+                        System.out.println(player + "'s Bal: $" + newBalance);
+                        player.sendMessage(ChatColor.GREEN + "Successfully bought " + Block + " for $" + price);
+                        player.getInventory().addItem(new ItemStack(target, 1));
+                    } catch (IOException e) {
+                        System.out.println("An error occurred.");
+                        e.printStackTrace();
                     }
                     event.setCancelled(true);
             }
         }
     }
+        if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+            if (event.getClickedBlock().getState() instanceof Sign) {
+                Sign sign = (Sign) event.getClickedBlock().getState();
+                int locationx = sign.getX();
+                int locationy = sign.getY();
+                int locationz = sign.getZ();
+
+                String customBlock = sign.getLine(1);
+                String Block = sign.getLine(2);
+                String price1 = sign.getLine(3);
+                int price2 = (int) (Integer.parseInt(price1) * .25);
+                String price = String.valueOf(Math.round(price2));
+                //get block
+                Material target = new Location(player.getWorld(), locationx, locationy - 1, locationz).getBlock().getType();
+
+                if (!customBlock.equals("")) {
+                    target = Material.valueOf(customBlock);
+                }
+                String Balance = null;
+                if (player.getInventory().containsAtLeast(new ItemStack(target), 1)) {
+                    //read file
+                    try {
+                        File myObj = new File( player + ".txt");
+                        Scanner myReader = new Scanner(myObj);
+                        while (myReader.hasNextLine()) {
+                            Balance  = myReader.nextLine();
+                        }
+                        myReader.close();
+                    } catch (FileNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    int newBalance = Integer.parseInt(Balance) + Integer.parseInt(price);
+                    String NewBalance1 = String.valueOf(newBalance);
+
+                    try {
+                        FileWriter myWriter = new FileWriter(player + ".txt");
+                        myWriter.write(NewBalance1);
+                        myWriter.close();
+                        System.out.println(player + "'s Bal: $" + newBalance);
+                        player.sendMessage(ChatColor.GREEN + "Successfully sold 1 " + Block + " for $" + price);
+                        player.getInventory().removeItem(new ItemStack(target, 1));
+                    } catch (IOException e) {
+                        System.out.println("An error occurred.");
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    player.sendMessage(ChatColor.RED + "You do not have enough " + Block + " to sell.");
+                }
+            }
+            }
+        }
 }
