@@ -47,7 +47,6 @@ public class signClick implements Listener {
 
                 if (!customBlock.equals("")) {
                     target = Material.valueOf(customBlock);
-                    player.sendMessage("replacing");
                 }
 
                 //get mode
@@ -83,7 +82,7 @@ public class signClick implements Listener {
                             FileWriter myWriter = new FileWriter(player + ".txt");
                             myWriter.write(NewBalance1);
                             myWriter.close();
-                            System.out.println("Successfully wrote to the file.");
+                            System.out.println(player + "'s Bal: $" + newBalance);
                             player.sendMessage(ChatColor.GREEN + "Successfully sold 1 " + Block + " for $" + price);
                             player.getInventory().removeItem(new ItemStack(target, 1));
                         } catch (IOException e) {
@@ -123,7 +122,7 @@ public class signClick implements Listener {
                             FileWriter myWriter = new FileWriter(player + ".txt");
                             myWriter.write(NewBalance1);
                             myWriter.close();
-                            System.out.println("Successfully wrote to the file.");
+                            System.out.println(player + "'s Bal: $" + newBalance);
                             player.sendMessage(ChatColor.GREEN + "Successfully bought " + Block + " for $" + price);
                             player.getInventory().addItem(new ItemStack(target, 1));
                         } catch (IOException e) {
