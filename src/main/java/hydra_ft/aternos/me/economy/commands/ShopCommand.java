@@ -5,30 +5,65 @@ import hydra_ft.aternos.me.economy.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 
-public class ShopCommand implements CommandExecutor {
-    private final Main main;
 
+public class ShopCommand implements Listener, CommandExecutor {
+    private final Main main;
 
     public ShopCommand(Main main) {
         this.main = main;
     }
-
+/*
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        Inventory open = event.getClickedInventory();
+        String name = player.getOpenInventory().getTitle();
+        ItemStack item = event.getCurrentItem();
+        if (item.getType() == Material.GRASS_BLOCK) {
+            player.sendMessage(ChatColor.GREEN + "It worked!");
+            player.closeInventory();
+        }
+    }
+*/
+@EventHandler
+public void onPlayerInteract(PlayerInteractEvent e) {
+    Action a = e.getAction();
+    Block block = e.getClickedBlock();
+    Player plr = e.getPlayer();
+    if(block.getState() instanceof Sign) {
+        Sign sign = (Sign) block.getState();
+        String[] ln = sign.getLines();
+        if(ln[0].equalsIgnoreCase("Hi")){
+            plr.sendMessage("Hi");
+        }
+    }
+}
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    /*
+        Inventory inv = Bukkit.createInventory(null, 27, ChatColor.DARK_GREEN + "House Of Bread Item Shop");
+
+     */
         Player player = null;
         if (sender instanceof Player) {
             player = (Player) sender;
         }
-        Inventory inv = Bukkit.createInventory(null, 27, ChatColor.DARK_GREEN + "House Of Bread Item Shop");
 
         ItemStack Blocks = new ItemStack(Material.GRASS_BLOCK);
         ItemMeta BlocksMeta = Blocks.getItemMeta();
@@ -61,6 +96,7 @@ public class ShopCommand implements CommandExecutor {
         ItemMeta CancelMeta = Cancel.getItemMeta();
 
 
+        //names
         BlocksMeta.setDisplayName(ChatColor.AQUA + "Blocks");
         Blocks.setItemMeta(BlocksMeta);
 
@@ -90,7 +126,7 @@ public class ShopCommand implements CommandExecutor {
 
         CancelMeta.setDisplayName(ChatColor.RED + "Cancel");
         Cancel.setItemMeta(CancelMeta);
-
+        /*
         inv.setItem(1, Blocks);
         inv.setItem(2, Interactive_Blocks);
         inv.setItem(3, Resources);
@@ -102,11 +138,8 @@ public class ShopCommand implements CommandExecutor {
         inv.setItem(9, Redstone);
         inv.setItem(10, Cancel);
 
-
-
         player.openInventory(inv);
+        */
         return true;
     }
-
-
 }

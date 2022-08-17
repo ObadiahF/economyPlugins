@@ -1,8 +1,11 @@
 package hydra_ft.aternos.me.economy;
 
-import hydra_ft.aternos.me.economy.commands.BalCommand;
 import hydra_ft.aternos.me.economy.commands.PayCommannd;
+import hydra_ft.aternos.me.economy.commands.BalCommand;
 import hydra_ft.aternos.me.economy.commands.ShopCommand;
+import hydra_ft.aternos.me.economy.listeners.blockBehindSign;
+import hydra_ft.aternos.me.economy.listeners.signClick;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Main extends JavaPlugin {
@@ -12,7 +15,10 @@ public final class Main extends JavaPlugin {
         // Plugin startup logic
         getServer().getPluginCommand("bal").setExecutor(new BalCommand(this));
         getServer().getPluginCommand("pay").setExecutor(new PayCommannd(this));
-        getServer().getPluginCommand("shop").setExecutor(new ShopCommand(this));
+        //getServer().getPluginCommand("shop").setExecutor(new ShopCommand(this));
+        getServer().getPluginManager().registerEvents(new signClick(),this);
+        getServer().getPluginManager().registerEvents(new blockBehindSign(),this);
+
     }
 
     @Override

@@ -1,17 +1,12 @@
 package hydra_ft.aternos.me.economy.commands;
 
 import hydra_ft.aternos.me.economy.Main;
-import jdk.internal.net.http.common.Log;
 import org.bukkit.Bukkit;
-import org.bukkit.Color;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.Inventory;
 import net.md_5.bungee.api.ChatColor;
-import org.checkerframework.checker.units.qual.C;
 
 import java.io.*;
 import java.nio.file.Files;
