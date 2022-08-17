@@ -51,7 +51,7 @@ public class signClick implements Listener {
                 //for selling
                 if (mode == "Selling") {
                     String Balance = null;
-                    if (player.getInventory().contains(new ItemStack(target, Integer.parseInt(amount)))) {
+                    if (player.getInventory().containsAtLeast(new ItemStack(target), Integer.parseInt(amount))) {
                         //read file
                         try {
                             File myObj = new File(player + ".txt");
@@ -73,12 +73,11 @@ public class signClick implements Listener {
                             myWriter.close();
                             System.out.println("Successfully wrote to the file.");
                             player.sendMessage(ChatColor.GREEN + "Successfully sold " + amount + " " + Block + " for $" + price);
-                            player.getInventory().addItem(new ItemStack(target, Integer.parseInt(amount)));
+                            player.getInventory().removeItem(new ItemStack(target, Integer.parseInt(amount)));
                         } catch (IOException e) {
                             System.out.println("An error occurred.");
                             e.printStackTrace();
                         }
-                        player.getInventory().removeItem(new ItemStack(target, Integer.parseInt(amount)));
                         mode = null;
 
                     } else {
