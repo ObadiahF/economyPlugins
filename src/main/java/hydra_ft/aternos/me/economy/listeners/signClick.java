@@ -3,9 +3,11 @@ package hydra_ft.aternos.me.economy.listeners;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.block.data.type.WallSign;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -14,6 +16,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.entity.ItemFrame;
+import org.bukkit.util.BoundingBox;
 
 import java.io.*;
 import java.io.File;
@@ -34,8 +37,19 @@ public class signClick implements Listener {
                 int locationy = sign.getY();
                 int locationz = sign.getZ();
 
+                String customBlock = sign.getLine(1);
+                String Block = sign.getLine(2);
+                String price = sign.getLine(3);
+
+                player.sendMessage(customBlock);
                 //get block
                 Material target = new Location(player.getWorld(), locationx, locationy - 1, locationz).getBlock().getType();
+
+                if (!customBlock.equals("")) {
+                    target = Material.valueOf(customBlock);
+                    player.sendMessage("replacing");
+                }
+
                 //get mode
                 if (sign.getLine(0).equals("[Buy]")) {
                     mode = "Buying";
@@ -44,14 +58,12 @@ public class signClick implements Listener {
                     mode = "Selling";
                 }
 
-                String amount = sign.getLine(1);
-                String Block = sign.getLine(2);
-                String price = sign.getLine(3);
+
 
                 //for selling
                 if (mode == "Selling") {
                     String Balance = null;
-                    if (player.getInventory().containsAtLeast(new ItemStack(target), Integer.parseInt(amount))) {
+                    if (player.getInventory().containsAtLeast(new ItemStack(target), 1)) {
                         //read file
                         try {
                             File myObj = new File(player + ".txt");
@@ -72,8 +84,8 @@ public class signClick implements Listener {
                             myWriter.write(NewBalance1);
                             myWriter.close();
                             System.out.println("Successfully wrote to the file.");
-                            player.sendMessage(ChatColor.GREEN + "Successfully sold " + amount + " " + Block + " for $" + price);
-                            player.getInventory().removeItem(new ItemStack(target, Integer.parseInt(amount)));
+                            player.sendMessage(ChatColor.GREEN + "Successfully sold 1 " + Block + " for $" + price);
+                            player.getInventory().removeItem(new ItemStack(target, 1));
                         } catch (IOException e) {
                             System.out.println("An error occurred.");
                             e.printStackTrace();
@@ -81,7 +93,7 @@ public class signClick implements Listener {
                         mode = null;
 
                     } else {
-                        player.sendMessage(ChatColor.RED + "You do not have enough " + amount + " " + Block + " to sell.");
+                        player.sendMessage(ChatColor.RED + "You do not have enough " + Block + " to sell.");
                     }
                 }
 
@@ -113,7 +125,7 @@ public class signClick implements Listener {
                             myWriter.close();
                             System.out.println("Successfully wrote to the file.");
                             player.sendMessage(ChatColor.GREEN + "Successfully bought " + Block + " for $" + price);
-                            player.getInventory().addItem(new ItemStack(target, Integer.parseInt(amount)));
+                            player.getInventory().addItem(new ItemStack(target, 1));
                         } catch (IOException e) {
                             System.out.println("An error occurred.");
                             e.printStackTrace();
